@@ -1,125 +1,88 @@
 #include "so_long.h" 
+//TODO exit 에서의 처리... 프레임 나눠서 움직임 자연스럽게... 화면 확대 축소 가능하게, 과제의 [그래픽] 관련 처리!
 
-#include <stdio.h>
-
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	print_background(void *mlx, t_map map)
 {
-	char	*dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
-}
-
-
-
-// // int main(int argc, char *argx[])
-// // {
-// // 	void	*mlx;
-// // 	void	*mlx_win;
-// // 	t_data	img;
-// // 	int		x;
-// // 	int		y;
-
-// // 	x = 0;
-// // 	y = 0;
-// // 	mlx = mlx_init();
-// // 	mlx_win = mlx_new_window(mlx, 900, 625, "Hello world!");
-// // 	img.img = mlx_new_image(mlx, 900, 625);
-// // 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
-// // 	while (x <= 625 && y <= 625)
-// // 	{
-// // 		my_mlx_pixel_put(&img, x, y, 0x00FF0000);
-// // 		x += 1;
-// // 		y += 1;
-// // 	}
-// // 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-// // 	mlx_loop(mlx);
-// // }
-
-int	set_background(void *mlx, t_map map, t_obj background, t_data *img)
-{// 배경인 모래 배경을 화면 전체에 까는 작업.
 	int	x;
 	int	y;
+	int	width;
+	int height;
+	void	*img;
 
 	x = 0;
 	y = 0;
-	img->img = mlx_xpm_file_to_image(mlx, "./xpm/sand.xpm", &(background.width), &(background.height));//이렇게.. 넘겨줘도.. 될될까..
-	/*error : 해당 이미지 파일이 없을 경우 에러 처리*/
-	if (img->img == NULL)
+	width = IMG_WIDTH;
+	height = IMG_HEIGHT;
+	img = mlx_xpm_file_to_image(mlx, "./xpm/sand.xpm", &(width), &(height));//TODO 이렇게 넘겨줘도 될까?
+	if (img == NULL)
+		handle_strerror("No image file");
+	while (y < map.height * IMG_HEIGHT)
 	{
-		write(1, "No image file", 13);
-		return (0);
-	}
-	while (y < map.height * 64)
-	{
-		while (x <= map.width * 64)
+		while (x <= map.width * IMG_HEIGHT)
 		{
-			mlx_put_image_to_window(mlx, map.mlx_win, img->img, x, y);
-			x += 64;
+			mlx_put_image_to_window(mlx, map.mlx_win, img, x, y);
+			x += IMG_WIDTH;
 		}
 		x = 0;
-		y += 64;
+		y += IMG_HEIGHT;
 	}
-	return (1);
 }
-int	set_other(void *mlx, t_map map, t_elements *elem, t_data *img)
+
+char	*classify_img(char c, int *j)
 {
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (i < (map.height))
+	if (c == '1')
+		return ("./xpm/stone.xpm");
+	else if (c == 'P')
+		return ("./xpm/monkey.xpm");
+	else if (c == 'C')
+		return ("./xpm/strawberry.xpm");
+	else if (c == 'B')
+		return ("./xpm/banana.xpm");
+	else
 	{
-		j = 0;
-		while (j < (map.width))
-		{
-			if (map.input[i][j] == '1')
-			{
-				img->img = mlx_xpm_file_to_image(mlx, "./xpm/stone.xpm", &(elem->wall.width), &(elem->wall.height));
-				//없을 경우 error
-				mlx_put_image_to_window(mlx, map.mlx_win, img->img, j * 64, i * 64);
-			}
-			else if (map.input[i][j] == 'P')
-			{
-				img->img = mlx_xpm_file_to_image(mlx, "./xpm/monkey.xpm", &(elem->player.width), &(elem->player.height));
-				//없을 경우 error
-				mlx_put_image_to_window(mlx, map.mlx_win, img->img, j * 64, i * 64);
-			} 
-			else if (map.input[i][j] == 'E')
-			{
-				img->img = mlx_xpm_file_to_image(mlx, "./xpm/segal.xpm", &(elem->exit.width), &(elem->exit.height));
-				//없을 경우 error
-				mlx_put_image_to_window(mlx, map.mlx_win, img->img, j * 64, i * 64);
-			}
-			else if (map.input[i][j] == 'C')
-			{
-				img->img = mlx_xpm_file_to_image(mlx, "./xpm/strawberry.xpm", &(elem->coin.width), &(elem->coin.height));
-				//없을 경우 error
-				mlx_put_image_to_window(mlx, map.mlx_win, img->img, j * 64, i * 64);
-			}
-			else if (!(map.input[i][j] == '0'))
-			{
-				//에러처리..
-				return (0);
-			}
-			j++;
-		}
-		i++;
+		(*j)++;
+		return (0);
 	}
-	return (1);
 }
 
-int	print_map(void *mlx, t_map map, t_elements *elem, t_data *img)
-{//에러처리 해주기
-	set_background(mlx, map, elem->background, img);
-	set_other(mlx, map, elem, img);
-	return (1);
+void print_other_and_count(void *mlx, t_map map, t_elements *elem)
+{
+	t_coordinate	now;
+	void	*img;
+	int		width;
+	int		height;
+	char	*str;
+
+	now.i = 0;
+	now.j = 0;
+	img = mlx_xpm_file_to_image(mlx, "./xpm/segal.xpm", &(width), &(height));
+	if (img == NULL)
+		handle_strerror("No image file");
+	mlx_put_image_to_window(mlx, map.mlx_win, img, (elem->exit.j) * (width), (elem->exit.i) * (width));
+	while (now.i < (map.height))
+	{
+		now.j = 0;
+		while (now.j < (map.width))
+		{
+			str = classify_img(map.input[now.i][now.j], &now.j);
+			if (str == 0)
+				continue ;
+			img = mlx_xpm_file_to_image(mlx, str, &(width), &(height));
+			if (img == NULL)//TODO ERROR : 이미지 파일이 없을 경우 에러
+				handle_strerror("No image file");
+			mlx_put_image_to_window(mlx, map.mlx_win, img, now.j * (width), now.i * (width));
+			now.j++;
+		}
+		now.i++;
+	}
 }
 
-#include <stdio.h>//지워야해/
+void	print_map(void *mlx, t_map map, t_elements *elem)
+{
+	print_background(mlx, map);
+	print_other_and_count(mlx, map, elem);
+}
 
-//그냥 테스트 함수이니라.
 void	test_map(t_map *map)
 {
 	int	i;
@@ -141,30 +104,105 @@ void	test_map(t_map *map)
 	}
 }
 
+int	is_not_wall_or_enemy(t_map map, int i, int j)
+{
+	if (map.input[i][j] == '1' || map.input[i][j] == 'B')
+		return (0);
+	else
+		return (1);
+}
+
+void	swap_locat(t_map *map, t_elements *elem, t_coordinate next)
+{
+	map->input[next.i][next.j] = 'P';
+	map->input[elem->player.i][elem->player.j] = '0';
+	elem->player = next;
+}
+
+void check_now(t_param *param)
+{
+	t_coordinate	now;
+	t_coordinate	exit;
+
+	exit = param->elem.exit;
+	now = param->elem.player;
+	if ((now.i == exit.i) && (now.j == exit.j))
+	{
+		if (param->elem.collect == 0)
+			handle_success(param->mlx, param->map);
+		else
+		{
+			write(1, "need more strawberries!\n", 25);
+		}
+	}
+}
+
+void	sl_putnbr(int num)
+{
+	char	c;
+
+	if (num == 0)
+		return ;
+	sl_putnbr(num / 10);
+	c = num % 10 + '0';
+	write(1, &c, 1);
+}
+
+int	key_hook(int keycode, t_param *param)
+{
+	t_coordinate	now;
+	t_coordinate	next;
+	t_map			map;
+
+	now = param->elem.player;
+	map = param->map;
+	next = now;;
+	// print_map(param->mlx, param->map, &(param->elem));
+	if (keycode == 13)
+		next.i -= 1;
+	else if (keycode == 0)
+		next.j -= 1;
+	else if (keycode == 1)
+		next.i += 1;
+	else if (keycode == 2)
+		next.j += 1;
+	else if (keycode == 53)
+		exit(0);
+	else
+		return (0);
+	if (map.input[next.i][next.j] == '1')
+		return (0);
+	else if (map.input[next.i][next.j] == 'C')
+		param->elem.collect--;
+	else if (map.input[next.i][next.j] == 'B')
+		handle_fail(param->mlx, param->map);
+	param->move++;
+	sl_putnbr(param->move);
+	write(1, "\n", 1);
+	// check_now(param);
+	swap_locat(&map, &(param->elem), next);
+	print_map(param->mlx, param->map, &(param->elem));
+	check_now(param);
+	return (0);
+}
+
+
 int	main(int argc, char *argv[])
 {
-	void	*mlx;
 	int		fd;
-	//OBJECTS	;
-	t_data	img;
-	t_elements elem;
-	t_map	map;
+	t_param		param;
 	
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0) //TODO : 해당 파일이 없을 시 에러!
-	{
-		write(1, "map file error!", 15);
-		return (0);
-	}
-	mlx = mlx_init();
-	read_and_init_map(mlx, &map, fd);
-	test_map(&map);//지워라 고냥 맴 출력 잘 되나 테스트 함수다.
-	// map_validity(&map);//만일 아니면 다 프리프리프리픨..
-	if (!print_map(mlx, map, &elem, &img))
-		return (0);
-	// set_wall(mlx, map, &wall, &img);
-	mlx_loop(mlx);
+		handle_perror();
+	param.mlx = mlx_init();
+	read_and_init_map(param.mlx, &(param.map), fd);
+	check_map_validity(param.map, &(param.elem));
+	print_map(param.mlx, param.map, &(param.elem));
+	param.move = 0;
+	// mlx_key_hook(param.map.mlx_win, key_hook, &(param));
+	mlx_hook(param.map.mlx_win, 2, 0, key_hook, &(param));
+	// check_now(&param);
+	mlx_loop(param.mlx);
 	close(fd);
 }
-
-//에러 관리를 어떻게 할찌... enum????
