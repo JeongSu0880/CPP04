@@ -25,6 +25,15 @@
 #  define WIN_NAME "Banana allergy monkey!"
 # endif
 
+enum Keycode
+{
+	Keycode_W = 13,
+	Keycode_A = 0,
+	Keycode_S = 1,
+	Keycode_D = 2,
+	Keycode_ESC = 53
+};
+
 typedef struct s_coordinate
 {
 	int	i;
@@ -67,8 +76,8 @@ void	check_edge(t_map map);
 void	check_elem(t_map map, t_elements *p_elem);
 void	handle_perror();
 void	handle_strerror();
-void	handle_success(void *mlx, t_map map);
+void	handle_success(void *mlx, t_map *map, t_elements elem);
 
-void	handle_fail(void *mlx, t_map map);
+void	handle_fail(void *mlx, t_map *map);
 
 #endif

@@ -1,0 +1,11 @@
+{
+	"files.associations": {
+		"mlx.h": "c",
+		"get_next_line.h": "c",
+		"so_long.h": "c",
+		"unistd.h": "c",
+		"chrono": "c",
+		"unordered_map": "c",
+		"stdio.h": "c"
+	}
+}
