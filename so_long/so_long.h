@@ -2,7 +2,6 @@
 # define SO_LONG_H
 
 # include <mlx.h>
-// # include <mlx_int.h>
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -23,6 +22,11 @@
 
 # ifndef WIN_NAME
 #  define WIN_NAME "Banana allergy monkey!"
+# endif
+
+
+# ifndef IMG_NAME_MAX_LEN
+#  define IMG_NAME_MAX_LEN 11
 # endif
 
 enum Keycode
@@ -62,10 +66,19 @@ typedef	struct s_param
 	t_elements	elem;
 	t_map		map;
 	int		move;
+	int		game_end;
 } t_param;
 
+typedef struct s_img
+{
+	void	*img;
+	int		width;
+	int		height;
+} t_img;
 
-char	*get_next_line(int fd);// 아직 안씀
+
+
+char	*get_next_line(int fd);
 char	*sl_strjoin(char *origin, char *new_read, int joint_len);
 void	fill_map_input(t_map *map, char *buf);
 void	get_map_size(t_map *map, char *buf);
@@ -79,5 +92,6 @@ void	handle_strerror();
 void	handle_success(void *mlx, t_map *map, t_elements elem);
 
 void	handle_fail(void *mlx, t_map *map);
+void	print_img(t_param *param, char *str, int i, int j);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 21:49:36 by jungslee          #+#    #+#             */
-/*   Updated: 2024/03/17 21:35:08 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/03/20 17:03:28 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,25 @@ void	check_edge(t_map map) //가장자리 검사 함수
 {
 	int	x;
 	int	y;
+	char	*str;
 
 	x = 0;
 	y = 0;
+	str = "Wrong map input : Edge error";
 	while (x < map.height)
 	{
 		if (map.input[x][0] != '1')
-			handle_strerror("Wrong map input : Edge error");
+			handle_strerror(str);
 		if (map.input[x][map.width - 1] != '1')
-			handle_strerror("Wrong map input : Edge error");
+			handle_strerror(str);
 		x++;
 	}
 	while (y < map.width)
 	{
 		if (map.input[0][y] != '1')
-			handle_strerror("Wrong map input : Edge error");
+			handle_strerror(str);
 		if (map.input[map.height - 1][y] != '1')
-			handle_strerror("Wrong map input : Edge error");
+			handle_strerror(str);
 		y++;
 	}
 }
@@ -52,7 +54,7 @@ void	change_elem_info(t_coordinate *to_change, int *count, t_coordinate now)
 
 //TODO 함수 줄 줄이기
 void	count_elem(t_map map, t_elements *p_elem, int *p_count, int *e_count)
-{
+{//TODO enemy의 개수가 필요할까?
 	t_coordinate	idx;
 	char	now;
 
@@ -71,9 +73,7 @@ void	count_elem(t_map map, t_elements *p_elem, int *p_count, int *e_count)
 				change_elem_info(&(p_elem->exit), e_count, idx);
 			else if (now == 'C')
 				p_elem->collect++;
-			else if (now == 'B')
-				p_elem->enemy++;
-			else if (!(now == '1' || now == '0' || now == '\n'))
+			else if (!(now == '1' || now == '0' || now == '\n' || now == 'B'))
 				handle_strerror("Wrong map input : Invalid character");
 			idx.j++;
 		}
@@ -141,7 +141,8 @@ char **copy_map(t_map map)
 
 void	update_and_add(char **map, int i, int j, int *pushed)
 {
-	map[i][j] = '1';
+	if (map[i][j] != 'E')
+		map[i][j] = '1';
 	(*pushed)++;
 }
 

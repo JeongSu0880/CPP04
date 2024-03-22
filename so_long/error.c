@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 17:39:28 by jungslee          #+#    #+#             */
-/*   Updated: 2024/03/19 17:45:46 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/03/21 15:11:50 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,19 @@ void	handle_success(void *mlx, t_map *map, t_elements elem)//TODO 이거 해결�
 	void	*img;
 	int		width;
 	int		height;
-	
 
-	write(1, "Success!\n", 9);
-	img = mlx_xpm_file_to_image(mlx, "./xpm/smile_monkey.xpm", &(width), &(height));
+	img = mlx_xpm_file_to_image(mlx, "./xpm/success_bird.xpm", &(width), &(height));
 	if (img == NULL)
 		handle_strerror("No image file");
-	mlx_put_image_to_window(mlx, map->mlx_win, img, width * elem.player.j, height * elem.player.i);
-	img = mlx_xpm_file_to_image(mlx, "./xpm/success.xpm", &(width), &(height));
+	mlx_put_image_to_window(mlx, map->mlx_win, img, width * elem.exit.j, height * elem.exit.i);
+	
+	
+	img = mlx_xpm_file_to_image(mlx, "./xpm/success_sign.xpm", &(width), &(height));
+	printf("wid : %d, hei : %d\n", width, height);
 	if (img == NULL)
 		handle_strerror("No image file");
-	mlx_put_image_to_window(mlx, map->mlx_win, img, width * (map->width / 2), height * (map->height / 2));
+	mlx_put_image_to_window(mlx, map->mlx_win, img, 64 * (map->width / 2) - width / 2, 64 * (map->height / 2) - height / 2);
+
 	// img = mlx_xpm_file_to_image(mlx, "./xpm/success_2.xpm", &(width), &(height));
 	// if (img == NULL)
 	// 	handle_strerror("No image file");
@@ -65,11 +67,18 @@ void	handle_fail(void *mlx, t_map *map)
 	int		height;
 	
 	write(1, "Fail!\n", 6);
+	img = mlx_xpm_file_to_image(mlx, "./xpm/fail_sign.xpm", &(width), &(height));
+	printf("wid : %d, hei : %d\n", width, height);
+	if (img == NULL)
+		handle_strerror("No image file");
+	printf("wid : %d hei : %d\n", width, height);
+	printf("map = wid : %d hei : %d\n", map->width, map->height);
+	mlx_put_image_to_window(mlx, map->mlx_win, img, (64 * map->width / 2) - width / 2, (64 * map->height / 2) - height / 2);
 	// img = mlx_xpm_file_to_image(mlx, "./xpm/fail_2.xpm", &(width), &(height));
 	// if (img == NULL)
 	// 	handle_strerror("No image file");
 	// printf("width : %d height : %d\n", width, height);
 	// printf("map width : %d map height : %d\n", map->width, map->height);
 	// mlx_put_image_to_window(mlx, map->mlx_win, img, (map->width/2) * width, (map->height/2) * height);
-	exit(0);
+	// exit(0);
 }

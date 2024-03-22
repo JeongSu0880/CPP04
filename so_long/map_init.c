@@ -6,7 +6,7 @@
 /*   By: jungslee <jungslee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 17:34:30 by jungslee          #+#    #+#             */
-/*   Updated: 2024/03/15 15:13:26 by jungslee         ###   ########.fr       */
+/*   Updated: 2024/03/20 17:32:28 by jungslee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ TODO
 3. 에러 처리.
 */
 
-char	*sl_strjoin(char *origin, char *new_read, int joint_len)//문자열 이어 붙이는 함수
+char	*sl_strjoin(char *origin, char *new_read, int joint_len)
 {
 	int		i;
 	int		j;
@@ -76,8 +76,8 @@ void	fill_map_input(t_map *map, char *buf)
 	}
 }
 
-void	get_map_size(t_map *map, char *buf)//TODO 맵 마지막이 \n \0이런식으로 끝나는 맵 처리
-{
+void	get_map_size(t_map *map, char *buf)
+{//TODO 함수 줄 줄이기 -> 조건을 간단히 하기.
 	int	idx;
 	int	wid_tmp;
 
@@ -85,7 +85,7 @@ void	get_map_size(t_map *map, char *buf)//TODO 맵 마지막이 \n \0이런식�
 	wid_tmp = 0;
 	while (buf[idx] == '\n')
 		idx++;
-	while (buf[idx] != '\0')//TODO 조건을 어떻게 하면 더 간단히 나타낼 수 있을까?
+	while (buf[idx] != '\0')
 	{
 		wid_tmp++;
 		if (buf[idx + 1] == '\n' || buf[idx + 1] == '\0')
@@ -93,6 +93,11 @@ void	get_map_size(t_map *map, char *buf)//TODO 맵 마지막이 \n \0이런식�
 			if ((buf[idx] != '\n' && \
 			(buf[idx + 1] == '\n' || buf[idx + 1] == '\0')))
 				map->height++;
+			if (buf[idx] == '\n' && (buf[idx + 1] == '\0' || buf[idx + 1] == '\n'))
+			{
+				idx++;
+				continue ;
+			}
 			if (map->width != 0 && map->width != wid_tmp)
 				handle_strerror("Wrong map input : Not a rectangle"); //TODO ERROR : 직사각형이 아님.
 			map->width = wid_tmp;
