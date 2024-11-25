@@ -15,6 +15,7 @@ public:
 	Dog &operator=(const Dog &original);
 
 	void makeSound() const;
+	const Brain &getBrain() const;
 };
 
 #endif
