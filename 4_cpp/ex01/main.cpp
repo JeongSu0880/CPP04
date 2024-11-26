@@ -2,30 +2,28 @@
 #include "Dog.hpp"
 #include "WrongCat.hpp"
 
+void leaks() {
+	system("leaks ex01");
+}
+
 int main()
 {
-	// const Animal* meta = new Animal();
-	// const Animal* j = new Dog();
-	// const Animal* i = new Cat();
-	// std::cout << j->getType() << " " << std::endl;
-	// std::cout << i->getType() << " " << std::endl;
-	// j->makeSound();
-	// i->makeSound();
-	// meta->makeSound();
+	Animal *arr[10];
 
-	// delete i;
-	// delete j;
-	// delete meta;
+	for (int i = 0; i < 5; ++i) {
+		std::cout << "=============== " << i <<  " ================" << std::endl;
+		arr[i] = new Dog();
+	}
+	for (int i = 5; i < 10; i++) {
+		std::cout << "=============== " << i <<  " ================" << std::endl;
+		arr[i] = new Cat();
+	}
 
-	const WrongAnimal *wrongAnimal = new WrongAnimal();
-	const WrongAnimal *wrongCat = new WrongCat();
+	// atexit(leaks);
+	
+	for (int i = 0; i < 10; i++) {
+		std::cout << "~~~~~~~~~~~~~~~~~~~~~ " << i <<  " ~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+		delete arr[i];
+	}	
 
-	std::cout << wrongCat->getType() << " " << std::endl;
-	wrongAnimal->makeSound();
-	wrongCat->makeSound();
-
-	delete wrongAnimal;
-	delete wrongCat;
-
-	return 0;
 }
