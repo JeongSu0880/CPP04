@@ -19,11 +19,6 @@ Dog &Dog::operator=(const Dog &original) {
 
 	return *this;
 }
-// Dog &Dog::operator=(const Dog &original) {
-// 	Animal::operator=(original);
-
-// 	return *this;
-// }
 
 void	Dog::makeSound() const {
 	std::cout << "Meong Meong!" << std::endl;
