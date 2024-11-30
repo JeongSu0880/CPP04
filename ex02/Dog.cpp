@@ -3,14 +3,14 @@
 Dog::Dog() : AAnimal("Dog") {
 	std::cout << "Dog constructor has been called." << std::endl;
 
-	this->brain = new Brain();
+	brain = new Brain();
 
 }
 
 Dog::Dog(const Dog &original) : AAnimal(original.getType()) {
 	std::cout << "Dog copy constructor has been called." << std::endl;
 
-	this->brain = new Brain(original.getBrain());
+	brain = new Brain(original.getBrain());
 }
 
 Dog::~Dog() {
@@ -21,9 +21,9 @@ Dog::~Dog() {
 
 Dog &Dog::operator=(const Dog &original) {
 	if (this != &original) {
-		delete this->brain;
-		this->type = original.getType();
-		this->brain = new Brain(original.getBrain());
+		delete brain;
+		type = original.getType();
+		brain = new Brain(original.getBrain());
 	}
 
 	return *this;
@@ -34,5 +34,5 @@ void	Dog::makeSound() const {
 }
 
 const Brain &Dog::getBrain() const {
-	return *this->brain;
+	return *brain;
 }

@@ -12,14 +12,14 @@ AMateria::AMateria(const AMateria &original) {
 
 AMateria &AMateria::operator=(const AMateria &original) {
 	if (this != &original) {
-		this->type = original.getType();
+		type = original.getType();
 	}
 
 	return *this;
 }
 
 std::string const &AMateria::getType() const {
-	return this->type;
+	return type;
 }
 
 void AMateria::use(ICharacter &target) {

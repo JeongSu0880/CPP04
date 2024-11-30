@@ -3,13 +3,13 @@
 Cat::Cat() : AAnimal("Cat") {
 	std::cout << "Cat constructor has been called." << std::endl;
 
-	this->brain = new Brain();
+	brain = new Brain();
 }
 
 Cat::Cat(const Cat &original) : AAnimal(original.getType()) {
 	std::cout << "Cat copy constructor has been called." << std::endl;
 
-	this->brain = new Brain(original.getBrain());
+	brain = new Brain(original.getBrain());
 }
 
 Cat::~Cat() {
@@ -20,9 +20,9 @@ Cat::~Cat() {
 
 Cat &Cat::operator=(const Cat &original) {
 	if (this != &original) {
-		delete this->brain;
-		this->type = original.getType();
-		this->brain = new Brain(original.getBrain());
+		delete brain;
+		type = original.getType();
+		brain = new Brain(original.getBrain());
 	}
 
 	return *this;
@@ -33,5 +33,5 @@ void	Cat::makeSound() const {
 }
 
 const Brain &Cat::getBrain() const {
-	return *this->brain;
+	return *brain;
 }

@@ -14,7 +14,7 @@ WrongCat::~WrongCat() {
 
 WrongCat &WrongCat::operator=(const WrongCat &original) {
 	if (this != &original) {
-		this->type = original.getType();
+		type = original.getType();
 	}
 
 	return *this;

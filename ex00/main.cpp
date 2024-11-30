@@ -22,7 +22,7 @@ int main()
 
 	std::cout << wrongCat->getType() << " " << std::endl;
 	wrongAnimal->makeSound();
-	wrongCat->makeSound();
+	wrongCat->makeSound();//이 부분
 
 	delete wrongAnimal;
 	delete wrongCat;

@@ -31,13 +31,13 @@ MateriaSource &MateriaSource::operator=(const MateriaSource &original) {
 		return *this;
 	}
 	for (int i = 0; i < 4; i++) {
-		if (this->slot[i] != NULL) {
-			delete this->slot[i];
+		if (slot[i] != NULL) {
+			delete slot[i];
 		}
 		
 		AMateria *item = original.getSlotItem(i);
 		if (item != NULL) {
-			this->slot[i] = item->clone();
+			slot[i] = item->clone();
 		}
 	}
 	return *this;
@@ -49,7 +49,7 @@ AMateria *MateriaSource::getSlotItem(int idx) const {
 		return NULL;
 	}
 
-	return (this->slot)[idx];
+	return slot[idx];
 }
 
 void MateriaSource::learnMateria(AMateria *m) {

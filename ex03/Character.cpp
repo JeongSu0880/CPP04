@@ -45,24 +45,24 @@ Character &Character::operator=(const Character &original) {
 		return *this;
 	}
 
-	this->name = original.getName();
+	name = original.getName();
 
 	emptyTrash();
 	for (int i = 0; i < 4; i++) {
-		if (this->inventory[i] != NULL) {
-			delete this->inventory[i];
-			this->inventory[i] = NULL;
+		if (inventory[i] != NULL) {
+			delete inventory[i];
+			inventory[i] = NULL;
 		}
 		AMateria *item = original.getInventoryItem(i);
 		if (item != NULL) {
-			this->inventory[i] = item->clone();
+			inventory[i] = item->clone();
 		}
 	}
 	return *this;
 }
 
 std::string const &Character::getName() const {
-	return this->name;
+	return name;
 }
 
 void Character::equip(AMateria *m) {
@@ -70,7 +70,7 @@ void Character::equip(AMateria *m) {
 
 	int i = 0;
 
-	while (this->inventory[i] != NULL) {
+	while (inventory[i] != NULL) {
 		if (i == 3) {
 			delete m;
 			return; //슬롯이 가득 차있는 경우
@@ -78,7 +78,7 @@ void Character::equip(AMateria *m) {
 		i++;
 	}
 
-	this->inventory[i] = m;
+	inventory[i] = m;
 }
 
 void Character::unequip(int idx) {
@@ -86,7 +86,7 @@ void Character::unequip(int idx) {
 		return;
 	}
 
-	if (this->inventory[idx] == NULL) {
+	if (inventory[idx] == NULL) {
 		return;
 	}
 
@@ -96,11 +96,11 @@ void Character::unequip(int idx) {
 
 void Character::use(int idx, ICharacter &target) {
 
-	if (this->inventory[idx] == NULL) {
+	if (inventory[idx] == NULL) {
 		return;
 	}
 
-	this->inventory[idx]->use(target);
+	inventory[idx]->use(target);
 }
 
 AMateria *Character::getInventoryItem(int idx) const {
@@ -109,7 +109,7 @@ AMateria *Character::getInventoryItem(int idx) const {
 		return NULL;
 	}
 
-	return (this->inventory)[idx];
+	return (inventory)[idx];
 }
 
 void Character::trashItem(AMateria *m) {

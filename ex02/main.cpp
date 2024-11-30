@@ -8,6 +8,9 @@ void leaks() {
 
 int main()
 {
+	//아래는 컴파일 에러
+	// AAnimal *animal = new AAnimal(); 
+
 	AAnimal *dog = new Dog();
 
 	dog->makeSound();
