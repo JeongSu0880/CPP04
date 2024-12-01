@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "algorithm": "cpp",
-        "cstdarg": "cpp",
-        "stdarg.h": "c",
-        "libprintf.h": "c",
-        "__locale": "c"
-    }
-}
